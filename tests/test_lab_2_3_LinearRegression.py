@@ -1,18 +1,18 @@
+from src.lab_2_3_LinearRegression import *
+import os
+import sys
 import pytest
 import numpy as np
 import matplotlib
 from sklearn.linear_model import LinearRegression
 
 matplotlib.use("Agg")
-import sys
-import os
 
 # Get the absolute path of the project root
 project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
 
 # Add it to sys.path
 sys.path.insert(0, project_root)
-from src.lab_2_3_LinearRegression import *
 
 
 def test_fit_simple():
@@ -38,7 +38,8 @@ def test_fit_multiple():
     true_intercept = 1.0
 
     # Generate y with some noise
-    y = true_intercept + X.dot(true_coefficients) + np.random.normal(0, 0.1, 100)
+    y = true_intercept + X.dot(true_coefficients) + \
+        np.random.normal(0, 0.1, 100)
 
     model.fit_multiple(X, y)
 
@@ -58,8 +59,10 @@ def test_predict_simple():
     assert predictions.shape == (
         2,
     ), "Prediction shape for simple regression is incorrect."
-    assert pytest.approx(predictions[0], 1e-6) == 12.0, "Prediction for 6 is incorrect."
-    assert pytest.approx(predictions[1], 1e-6) == 14.0, "Prediction for 7 is incorrect."
+    assert pytest.approx(
+        predictions[0], 1e-6) == 12.0, "Prediction for 6 is incorrect."
+    assert pytest.approx(
+        predictions[1], 1e-6) == 14.0, "Prediction for 7 is incorrect."
 
 
 def test_predict_multiple():
@@ -70,7 +73,8 @@ def test_predict_multiple():
     true_intercept = 1.0
 
     # Generate y with some noise
-    y = true_intercept + X.dot(true_coefficients) + np.random.normal(0, 0.1, 100)
+    y = true_intercept + X.dot(true_coefficients) + \
+        np.random.normal(0, 0.1, 100)
 
     model.fit_multiple(X, y)
 
@@ -116,9 +120,10 @@ def test_evaluate_regression_imperfect():
     assert metrics["RMSE"] == pytest.approx(expected_RMSE, rel=1e-5)
     assert metrics["MAE"] == pytest.approx(expected_MAE, rel=1e-5)
 
+
 def test_anscombe_quartet():
     anscombe, datasets, models, result = anscombe_quartet()
-    assert len(datasets == 4), "Datasets should contain 4 elements."
+    assert len(datasets) == 4, "Datasets should contain 4 elements."
     assert all(
         map(lambda r2: pytest.approx(r2, 1e-2) == 0.666, result["R2"])
     ), "R2 values are incorrect."
@@ -128,6 +133,7 @@ def test_anscombe_quartet():
     assert all(
         map(lambda mae: pytest.approx(mae, 1) == 0.8, result["MAE"])
     ), "MAE values are incorrect."
+
 
 def test_sklearn_comparison():
     class MockLinearRegression:
@@ -140,7 +146,7 @@ def test_sklearn_comparison():
     def mock_linreg():
         """Fixture to create a mock linear regression model."""
         return MockLinearRegression(coefficient=2.0, intercept=1.0)
-    
+
     # Generate simple test data
     x = np.array([1, 2, 3, 4, 5])
     y = np.array([3, 5, 7, 9, 11])  # y = 2x + 1
